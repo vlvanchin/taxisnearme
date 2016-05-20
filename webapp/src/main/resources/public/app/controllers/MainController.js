@@ -6,10 +6,12 @@ app.controller("MainController", function ($scope, MainService) {
     radius : 500,
     address : "11 Bishan Street 21, Singapore",
     //address : "573943"
+    busStopId : "53311"
   };  
   
   $scope.baseLayer = {};
   $scope.markers = new L.layerGroup();
+  $scope.buses = [];
 
   $scope.init = function(){
 
@@ -54,7 +56,8 @@ app.controller("MainController", function ($scope, MainService) {
 	    	$scope.map.panTo([myLocation.latitude, myLocation.longitude]);	
 	    });
 	    
-	});
+	});	
+	
 
 	//var features = $scope.data.features;
 	//L.geoJson(features).addTo($scope.map);
@@ -76,6 +79,22 @@ app.controller("MainController", function ($scope, MainService) {
 	$scope.map.panTo([x,y]);*/
 	
   }
+  
+  $scope.submitBusQuery = function(){
+	
+    MainService.submitBusQuery($scope.query.busStopId).then(function(data) {    
+    	$scope.buses = [];
+    	for(var serviceNo in data)
+    	{
+    		var bus = {
+    			"serviceNo" : serviceNo,
+    			"arrivalMins" : data[serviceNo] + " mins"
+    		}
+    		$scope.buses.push(bus);
+    	}
+    });
+  }
+  
 });
 
 /*L.marker([51.5, -0.09]).addTo(mymap)
