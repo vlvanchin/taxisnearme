@@ -1,3 +1,5 @@
 webapp/.classpath
 webapp/.project
 webapp/.gitignore
+.classpath
+.project
