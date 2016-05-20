@@ -37,9 +37,9 @@ app.controller("MainController", function ($scope, MainService) {
 	var map = $scope.map;
 	
 	MainService.getLocation($scope.query.address).then(function(myLocation){
-	    MainService.submitQuery($scope.query).then(function(data) {
+	    MainService.submitQuery($scope.query, myLocation).then(function(data) {
 	    	markers.clearLayers();
-	    	var radius = $scope.query.radius;
+/*	    	var radius = $scope.query.radius;
 	    	for(var i=0; i < data.length; i++)
 	    	{
 	    		var c = data[i];
@@ -47,7 +47,8 @@ app.controller("MainController", function ($scope, MainService) {
 		    	var long = c.longitude;
 		    	var marker = L.marker([lat,long]);
 		    	markers.addLayer(marker).addTo(map);
-	    	}   
+	    	}   */
+	    	L.geoJson(data).addTo($scope.map)
 	    	
 	    	L.circle([myLocation.latitude, myLocation.longitude], radius, {
 	    		color: 'red',
