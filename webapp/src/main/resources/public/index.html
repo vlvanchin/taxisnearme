@@ -15,7 +15,7 @@
 	    			<div class="box-header">
 	    				<i class="fa fa-cab"></i> TAXI QUERY
 	    			</div>
-          			  <form role="form" ng-submit="submitQuery()" method="POST" name="rform"/>
+          			 <form role="form" ng-submit="submitQuery()" method="POST" name="rform"/>
 	    				<div class="box-body">
 	    					<div class="form-group">
 	    						<label>Address or Postal Code</label>
@@ -25,7 +25,10 @@
 	    						<label>Radius (m)</label>
 	    						<input type="number" class="form-control" ng-model="query.radius"/>
 	    					</div>
-	    				</div>
+	    					<div class="form-group" ng-show="numberOfTaxis > 0">	    				
+	    						<label>Number of Taxis Within Vicinity : </label><h2><font color="blue">{{numberOfTaxis}}</font></h2>
+	    					</div>
+	    				</div>  				
 	    				<div class="box-footer">
 	    					<button type="submit" class="btn btn-primary">Get Available Taxis</button>
 	    				</div>

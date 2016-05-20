@@ -2,6 +2,7 @@ app.controller("MainController", function ($scope, MainService) {
 
   $scope.data = data1;
   $scope.map = {};
+  $scope.numberOfTaxis = 0;
   $scope.query = {
     radius : 500,
     address : "11 Bishan Street 21, Singapore",
@@ -53,7 +54,9 @@ app.controller("MainController", function ($scope, MainService) {
 	    		fillColor: '#f03',
 	    		fillOpacity: 0.5
 	    	}).addTo(markers);
-	    	$scope.map.panTo([myLocation.latitude, myLocation.longitude]);	
+	    	$scope.map.panTo([myLocation.latitude, myLocation.longitude]);
+	    	
+	    	$scope.numberOfTaxis = data.length;
 	    });
 	    
 	});	
