@@ -4,7 +4,8 @@ app.controller("MainController", function ($scope, MainService) {
   $scope.map = {};
   $scope.query = {
     radius : 500,
-    postalCode : "573943"
+    address : "11 Bishan Street 21, Singapore",
+    //address : "573943"
   };  
   
   $scope.baseLayer = {};
@@ -32,7 +33,7 @@ app.controller("MainController", function ($scope, MainService) {
 	var markers = $scope.markers;
 	var map = $scope.map;
 	
-	MainService.getLocation($scope.query.postalCode).then(function(myLocation){
+	MainService.getLocation($scope.query.address).then(function(myLocation){
 	    MainService.submitQuery($scope.query).then(function(data) {
 	    	markers.clearLayers();
 	    	var radius = $scope.query.radius;
@@ -55,8 +56,11 @@ app.controller("MainController", function ($scope, MainService) {
 	    
 	});
 
-
-/*  	var radius = $scope.query.radius;
+	//var features = $scope.data.features;
+	//L.geoJson(features).addTo($scope.map);
+	
+	
+/*	var radius = $scope.query.radius;
   	var cs = $scope.data.features[0].geometry.coordinates;
 	var c1 = cs[0];
 	var x = c1[1];
@@ -70,9 +74,8 @@ app.controller("MainController", function ($scope, MainService) {
 	}).addTo($scope.map);
 
 	$scope.map.panTo([x,y]);*/
+	
   }
-
-
 });
 
 /*L.marker([51.5, -0.09]).addTo(mymap)

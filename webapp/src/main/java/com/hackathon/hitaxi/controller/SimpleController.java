@@ -18,8 +18,8 @@ import com.hackathon.hitaxi.util.JsonUtils;
 @RestController
 public class SimpleController {
     
-    	private static final String POSTAL_CODE_URL = "http://maps.googleapis.com/maps/api/geocode/json?address={postalCode}&sensor=true";
-	
+    	private static final String ADDRESS_URL = "http://maps.googleapis.com/maps/api/geocode/json?address={postalCode}&sensor=true";
+
 	@RequestMapping("/helloworld")
 	public String helloworld(Model model) {
 			//model.addAttribute("message","Hello World! Server is running...");
@@ -65,7 +65,7 @@ public class SimpleController {
 	    RestTemplate restTemplate = new RestTemplate();
 	    Map<String, Object> req = new HashMap<String, Object>();
 	    req.put("postalCode", postalCode);	    
-	    String response = restTemplate.getForObject(POSTAL_CODE_URL, String.class, req);
+	    String response = restTemplate.getForObject(ADDRESS_URL, String.class, req);
 	    Map<String, Object> responseMap = JsonUtils.convertJsonToMap(response);
 	    List results = (List) responseMap.get("results");
 	    Map<String,Object> result = (Map<String,Object>) results.get(0);
@@ -77,6 +77,6 @@ public class SimpleController {
 	    coordinate.put("longitude", longitude);
 	    return coordinate;
 	}
-
+	
 }
 	
