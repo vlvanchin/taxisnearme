@@ -11,9 +11,10 @@ import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.geo.GeoJson;
 import org.springframework.data.mongodb.core.geo.GeoJsonGeometryCollection;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hackathon.hitaxi.service.TaxiRepository;
@@ -29,7 +30,7 @@ public class AvailableTaxiController {
 	@RequestMapping(value = "/testing", method=RequestMethod.GET)
 	public List<GeoJsonPoint> getAllTaxisWithin() {
 		
-		Circle circle = new Circle(new Point(103.8305, 1.30578), new Distance(5, Metrics.KILOMETERS));
+		Circle circle = new Circle(new Point(103.8305, 1.30578), new Distance(10, Metrics.KILOMETERS));
 		List<TaxiAvailabilityInfo> taxis = taxiRepository.findByPositionWithin(circle );
 		List<GeoJsonPoint> geoJsonPoints = new ArrayList<GeoJsonPoint>();
 		for (TaxiAvailabilityInfo taxiAvailabilityInfo : taxis) {
@@ -45,6 +46,7 @@ public class AvailableTaxiController {
 	public GeoJsonGeometryCollection getAllTaxisWithinThree() {
 		
 		Circle circle = new Circle(new Point(103.8305, 1.30578), new Distance(5, Metrics.KILOMETERS));
+		
 		List<TaxiAvailabilityInfo> taxis = taxiRepository.findByPositionWithin(circle );
 		List<GeoJson<?>> geometries = new ArrayList<GeoJson<?>>();
 		
@@ -66,11 +68,22 @@ public class AvailableTaxiController {
 	}
 	
 	
-	@RequestMapping(value = "/testingtwo", method=RequestMethod.GET)
-	public List<GeoJsonPoint> getTaxisNearMe(@RequestParam(value="location") Point point, @RequestParam(value="radius") Distance radius) {
+	@RequestMapping(value = "/testingtwo/{x}/{y}/{radius}", method=RequestMethod.GET)
+	public List<GeoJsonPoint> getTaxisNearMe(@PathVariable Double x, @PathVariable Double y, @PathVariable Double radius) {
+		//Circle circle = new Circle(new Point(103.8305, 1.30578), new Distance(5, Metrics.KILOMETERS));
+		//Circle circle = new Circle(point, radius);
 		
-		Circle circle = new Circle(new Point(103.8305, 1.30578), new Distance(5, Metrics.KILOMETERS));
+		Double radiusInKm = radius/1000;
+		Circle circle = new Circle(new Point(y,x), new Distance(radiusInKm*10, Metrics.KILOMETERS));
+
+System.out.println("Y : " + y);
+System.out.println("X : " + x);
+
+System.out.println("Radius : " + radius);
+System.out.println("radiusInKm : " + radiusInKm);
+
 		List<TaxiAvailabilityInfo> taxis = taxiRepository.findByPositionWithin(circle );
+		System.out.println("Total number of taxis: " + taxis.size());
 		List<GeoJsonPoint> geoJsonPoints = new ArrayList<GeoJsonPoint>();
 		for (TaxiAvailabilityInfo taxiAvailabilityInfo : taxis) {
 			geoJsonPoints.add(new GeoJsonPoint(new Point(taxiAvailabilityInfo.getPosition()[0], taxiAvailabilityInfo.getPosition()[1])));

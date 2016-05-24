@@ -4,7 +4,7 @@ app.controller("MainController", function ($scope, MainService) {
   $scope.map = {};
   $scope.numberOfTaxis = 0;
   $scope.query = {
-    radius : 500,
+    radius : 5000,
     address : "11 Bishan Street 21, Singapore",
     //address : "573943"
     busStopId : "53311"
@@ -27,7 +27,7 @@ app.controller("MainController", function ($scope, MainService) {
 	//singapore map coordinates, zoom level
 	var mymap = L.map('mapid',{
 		layers : [$scope.baseLayer]
-	}).setView([1.290270, 103.851959], 15);
+	}).setView([1.290270, 103.851959], 13);
 	
 	$scope.map = mymap;
   }
@@ -38,19 +38,20 @@ app.controller("MainController", function ($scope, MainService) {
 	
 	MainService.getLocation($scope.query.address).then(function(myLocation){
 	    MainService.submitQuery($scope.query, myLocation).then(function(data) {
+	    	console.log(data);
 	    	markers.clearLayers();
-/*	    	var radius = $scope.query.radius;
+	    	var radius = $scope.query.radius;
 	    	for(var i=0; i < data.length; i++)
 	    	{
 	    		var c = data[i];
-		    	var lat = c.latitude; 
-		    	var long = c.longitude;
+		    	var lat = c.y; 
+		    	var long = c.x;
 		    	var marker = L.marker([lat,long]);
 		    	markers.addLayer(marker).addTo(map);
-	    	}   */
-	    	L.geoJson(data).addTo($scope.map)
+	    	}   
+	    	//L.geoJson(data).addTo($scope.map);
 	    	
-	    	L.circle([myLocation.latitude, myLocation.longitude], radius, {
+	    	L.circle([myLocation.latitude, myLocation.longitude], radius/5, {
 	    		color: 'red',
 	    		fillColor: '#f03',
 	    		fillOpacity: 0.5

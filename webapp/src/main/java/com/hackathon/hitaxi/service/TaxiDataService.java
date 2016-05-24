@@ -1,10 +1,13 @@
 package com.hackathon.hitaxi.service;
 
 import java.net.URI;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +33,7 @@ public class TaxiDataService {
 	@Autowired
 	private TaxiRepository taxiRepository;
 	
-	@Scheduled(fixedDelay = 60000)
+	@Scheduled(fixedDelay = 30000)
 	public void fetchTaxiData() {
 		RestTemplate restTemplate = new RestTemplate();
 		String url = "https://api.data.gov.sg/v1/transport/taxi-availability";
@@ -40,7 +43,11 @@ public class TaxiDataService {
 		
 		Date currentDate = new Date();
 		
-		String now = "2016-05-20T12:43:00" ;
+		//String now = "2016-05-20T15:35:00" ;
+		
+		
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		String now = sdf.format(currentDate);
 		URI uri = UriComponentsBuilder.fromHttpUrl(url).queryParam("date-time", now ).build().encode().toUri();
 		
 		
@@ -63,8 +70,10 @@ public class TaxiDataService {
 		System.out.println("writing to mongo db : " + currentTime);
 		
 		// Do removal of old document objects from DB
-		calendar.add(Calendar.MINUTE, -1);
-		taxiRepository.deleteByTimeLessThan(calendar.getTimeInMillis());
+//		calendar.add(Calendar.MINUTE, -1);
+//		taxiRepository.deleteByTimeLessThan(calendar.getTimeInMillis());
+		
+		taxiRepository.deleteAll();
 		
 		// do REST query 
 		for (Features feature : features) {
@@ -78,7 +87,7 @@ public class TaxiDataService {
 				//points.add(new Point(new Double(coordinates[i][0]),new Double(coordinates[i][1])));
 				
 				double[] position = { new Double (coordinates[i][0]).doubleValue(),new Double(coordinates[i][1]).doubleValue()};
-
+//				double[] position = { new Double (coordinates[i][1]).doubleValue(),new Double(coordinates[i][0]).doubleValue()};
 				TaxiAvailabilityInfo aTaxi = new TaxiAvailabilityInfo();
 				aTaxi.setPosition(position);
 				aTaxi.setTime(currentTime);
